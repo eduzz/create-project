@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "target": "ES2019",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "removeComments": true,
+    "esModuleInterop": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "inlineSourceMap": true,
+    "noImplicitAny": true,
+    "noEmitOnError": true,
+    "noUnusedLocals": true,
+    "importHelpers": true,
+    "inlineSources": true,
+    "skipLibCheck": true,
+    "alwaysStrict": true,
+    "outDir": ".",
+    "baseUrl": "."
+  },
+  "include": [
+    "generator/**/*.ts"
+  ],
+  "exclude": [
+    "templates",
+    "node_modules"
+  ]
+}

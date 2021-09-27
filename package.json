@@ -1,0 +1,39 @@
+{
+  "name": "@eduzz/templates",
+  "version": "0.0.1",
+  "main": "./index.js",
+  "scripts": {
+    "start": "ts-node ./index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eduzz/templates.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/eduzz/templates/issues"
+  },
+  "homepage": "https://github.com/eduzz/templates#readme",
+  "dependencies": {
+    "tslib": "2.3.1"
+  },
+  "devDependencies": {
+    "@eduzz/eslint-config-houston": "0.32.5",
+    "@typescript-eslint/eslint-plugin": "4.31.2",
+    "@typescript-eslint/parser": "4.31.2",
+    "eslint": "7.32.0",
+    "eslint-config-prettier": "8.3.0",
+    "eslint-plugin-eslint-plugin": "3.6.1",
+    "eslint-plugin-import": "2.24.2",
+    "eslint-plugin-prettier": "4.0.0",
+    "eslint-plugin-react": "7.26.0",
+    "eslint-plugin-react-hooks": "4.2.0",
+    "eslint-plugin-sonarjs": "0.10.0",
+    "eslint-plugin-unused-imports": "1.1.5",
+    "prettier": "2.4.1",
+    "ts-node": "10.2.1",
+    "typescript": "4.4.3"
+  }
+}
