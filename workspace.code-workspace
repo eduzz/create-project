@@ -1,13 +1,34 @@
 {
 	"folders": [
 		{
-			"name": "Root",
+			"name": "Generator",
 			"path": "."
 		},
 		{
-			"name": "Front",
-			"path": "templates/front"
-		}
+			"name": "Front: React",
+			"path": "templates/front/react"
+		},
+		{
+			"name": "Mobile: React Native",
+			"path": "templates/mobile/react-native"
+		},
+		{
+			"name": "Node: API",
+			"path": "templates/back/node/api"
+		},
+		{
+			"name": "Node: Microservice",
+			"path": "templates/back/node/microservice"
+		},
+		{
+			"name": "PHP: API",
+			"path": "templates/back/php/api"
+		},
+		{
+			"name": "PHP: Microservice",
+			"path": "templates/back/php/microservice"
+		},
+		
 	],
 	"settings": {
 		"editor.formatOnPaste": false,
