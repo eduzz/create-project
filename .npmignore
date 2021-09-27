@@ -2,3 +2,4 @@ node_modules
 .git
 generator/**/*.ts
 yarn.lock
+templates

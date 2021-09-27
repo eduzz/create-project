@@ -9,13 +9,10 @@
     "seed": "git@github.com:eduzz/react-admin-seed.git"
   },
   "scripts": {
-    "start": "node ./init.js",
-    "lint": "yarn eslint \"./src/**/*.ts\" \"./src/**/*.tsx\"",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject",
-    "webpack-analyze": "node ./scripts/webpack-analyze.js",
-    "update-base": "node ./scripts/update-base.js",
+    "lint": "yarn eslint \"./src/**/*.ts\" \"./src/**/*.tsx\"",
     "postinstall": "bash scripts/postinstall.sh"
   },
   "dependencies": {
