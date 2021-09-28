@@ -1,6 +1,6 @@
 {
   "name": "@eduzz/create-project",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "main": "./index.js",
   "bin": {
     "eduzz-create-project": "./index.js"
@@ -26,6 +26,7 @@
     "lodash": "4.17.21",
     "ora": "5",
     "progress": "^2.0.3",
+    "source-map-support": "^0.5.20",
     "tslib": "2.3.1"
   },
   "devDependencies": {
