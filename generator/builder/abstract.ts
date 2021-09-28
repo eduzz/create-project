@@ -5,13 +5,16 @@ import ora from 'ora';
 import ProgressBar from 'progress';
 
 import { askMoreParams, ParamQuestions } from '../askParams';
+import { execCommandSilent } from '../command';
 import { TEMPLATE_FOLDER } from '../config';
 import getFolderSize from '../folderSize';
 import { IBuilderReplacer, IWizardAnswers } from '../interfaces';
 
 export abstract class AbstractProjectBuilder<P extends IWizardAnswers = IWizardAnswers> {
+  public abstract initCommand: string;
   protected abstract templatePath: string;
   protected abstract moreParamsQuestions: ParamQuestions<P>;
+
   protected params: P;
 
   constructor(params: IWizardAnswers, private targetBasePath: string) {
@@ -73,6 +76,16 @@ export abstract class AbstractProjectBuilder<P extends IWizardAnswers = IWizardA
     }
 
     await fs.writeFile(finalPath, content);
+  }
+
+  protected async gitInit() {
+    const loader = ora('Git').start();
+
+    await execCommandSilent('git', ['init'], { stdio: 'ignore', cwd: this.getTargetPath() });
+    await execCommandSilent('git', ['add', '.'], { stdio: 'ignore', cwd: this.getTargetPath() });
+    await execCommandSilent('git', ['commit', '-nm', 'Commit inicial'], { stdio: 'ignore', cwd: this.getTargetPath() });
+
+    loader.succeed();
   }
 
   private bToMB(val: number) {

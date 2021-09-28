@@ -22,6 +22,13 @@ async function init(initialParams?: IWizardAnswers): Promise<void> {
   }
 
   await builder.build();
+
+  console.log('\n\n\n*************************************');
+  console.log('* Tudo pronto, agora vá codar! 💻');
+  console.log('\n-- Para iniciar: -----------------');
+  console.log(`$ cd ${params.slug}`);
+  console.log(`$ ${builder.initCommand}`);
+  console.log('----------------------------------');
 }
 
 init()

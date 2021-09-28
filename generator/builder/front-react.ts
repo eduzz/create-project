@@ -1,7 +1,7 @@
 import ora from 'ora';
 
 import { ParamQuestions } from '../askParams';
-import { execCommand } from '../command';
+import { execCommand, execCommandSilent } from '../command';
 import { IBuilderReplacer, IWizardAnswers } from '../interfaces';
 import { AbstractProjectBuilder } from './abstract';
 
@@ -12,6 +12,7 @@ interface IWizardExtra extends IWizardAnswers {
 }
 
 export class FrontReactBuilder extends AbstractProjectBuilder<IWizardExtra> {
+  public initCommand = 'yarn start';
   protected templatePath = 'front/react';
   protected moreParamsQuestions: ParamQuestions<IWizardExtra> = [
     {
@@ -34,7 +35,7 @@ export class FrontReactBuilder extends AbstractProjectBuilder<IWizardExtra> {
   public async checkDeps() {
     const loader = ora('Verificando dependências').start();
     try {
-      await execCommand('yarn', ['-v']);
+      await execCommandSilent('yarn', ['-v'], { stdio: 'ignore' });
       loader.succeed();
     } catch (err) {
       loader.fail();
@@ -45,6 +46,7 @@ export class FrontReactBuilder extends AbstractProjectBuilder<IWizardExtra> {
   public async build(): Promise<void> {
     await this.copyFiles();
     await this.config();
+    await this.gitInit();
 
     await execCommand('yarn', ['install'], { cwd: this.getTargetPath() });
   }

@@ -8,3 +8,7 @@ export async function execCommand(command: string, args: string[], options: chil
     spawned.once('exit', code => (code >= 0 ? resolve() : reject()));
   });
 }
+
+export async function execCommandSilent(command: string, args: string[], options: childProcess.SpawnOptions = {}) {
+  return execCommand(command, args, { ...options, stdio: 'ignore' });
+}
