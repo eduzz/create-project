@@ -1,6 +1,6 @@
 {
   "name": "@eduzz/create-project",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "main": "./index.js",
   "bin": {
     "eduzz-create-project": "./index.js"
