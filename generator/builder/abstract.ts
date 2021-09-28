@@ -1,3 +1,4 @@
+import { existsSync } from 'fs';
 import fs from 'fs/promises';
 import path from 'path';
 
@@ -60,8 +61,14 @@ export abstract class AbstractProjectBuilder<P extends IWizardAnswers = IWizardA
     await fs.mkdir(this.getTargetPath());
     await fs.cp(this.getTemplateFullPath(), this.getTargetPath(), {
       recursive: true,
-      filter: path => !path.includes('node_modules') && !path.includes('vendor')
+      filter: path => !/templates.+(node_modules|vendor)/gim.test(path)
     });
+
+    const npmIgnore = path.join(this.getTargetPath(), '.npmignore');
+    if (existsSync(npmIgnore)) {
+      // o npm renomeia o .gitignore para .npmignore
+      await fs.rename(npmIgnore, path.join(this.getTargetPath(), '.gitignore'));
+    }
 
     clearInterval(checkInterval);
     ora('Arquivos copiados').succeed();

@@ -11,7 +11,7 @@ async function processPath(itemPath: string, ignore: RegExp, fileSizes?: Map<num
     fileSizes = new Map();
   }
 
-  if (ignore?.test(itemPath)) return;
+  if (ignore?.test(itemPath)) return fileSizes;
 
   const stats = await fs.lstat(itemPath);
   fileSizes.set(stats.ino, stats.size);

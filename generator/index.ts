@@ -1,13 +1,14 @@
 import { cwd } from 'process';
 
+import { version } from '../package.json';
 import { askParams, confirmParams } from './askParams';
 import { getBuilder } from './builder';
 import { IWizardAnswers } from './interfaces';
 
 async function init(initialParams?: IWizardAnswers): Promise<void> {
-  console.log('\n*****(Eduzz)********************************');
-  console.log('* Bem vindo ao gerador de projetos finitos *');
-  console.log('**********************************(42)******\n');
+  console.log('\n*****(Eduzz)***************************************');
+  console.log(`* Bem vindo ao gerador de projetos finitos v${version} *`);
+  console.log('************************************(42)***********\n');
 
   let params = await askParams(initialParams);
   const builder = getBuilder(params, cwd());

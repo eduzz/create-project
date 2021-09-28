@@ -1,3 +1,7 @@
+import fs from 'fs';
+import path from 'path';
+import { cwd } from 'process';
+
 import inquirer from 'inquirer';
 import kebabCase from 'lodash/kebabCase';
 
@@ -60,8 +64,12 @@ export async function askParams(previousAnswers?: IWizardAnswers): Promise<IWiza
           return 'Pelo menos 3 letras';
         }
 
-        if (kebabCase(value) === value) {
-          `Slug inválido, não utilize maísculas e underline(_). Ex: ${kebabCase(answers.project)}`;
+        if (kebabCase(value) !== value) {
+          return `Slug inválido, não utilize maísculas e underline(_). Ex: ${kebabCase(answers.project)}`;
+        }
+
+        if (fs.existsSync(path.join(cwd(), value))) {
+          return 'Já existe uma pasta com esse nome, apague-a ou escolha outro slug.';
         }
 
         return true;

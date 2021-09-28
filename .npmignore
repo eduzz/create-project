@@ -1,6 +1,5 @@
-node_modules
 .git
-generator/**/*.ts
-yarn.lock
-templates
-teste
+node_modules
+./teste
+./generator/**/*.ts
+!.gitignore
