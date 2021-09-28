@@ -3,3 +3,4 @@ node_modules
 generator/**/*.ts
 yarn.lock
 templates
+teste

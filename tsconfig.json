@@ -15,8 +15,7 @@
     "inlineSources": true,
     "skipLibCheck": true,
     "alwaysStrict": true,
-    "outDir": ".",
-    "baseUrl": "."
+    "outDir": "./generator",
   },
   "include": [
     "generator/**/*.ts"

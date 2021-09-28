@@ -6,6 +6,9 @@ export interface IWizardAnswers {
   slug: string;
   repository: string;
   sentryDsn?: string;
+}
 
-  confirmed: boolean;
+export interface IBuilderReplacer {
+  from: string;
+  to: string;
 }

@@ -1,12 +1,23 @@
-import { askParams } from './askParams';
+import { cwd } from 'process';
+
+import { askParams, confirmParams } from './askParams';
 import { getBuilder } from './builder';
 import { TEMPLATE_FOLDER } from './config';
+import { IWizardAnswers } from './interfaces';
 
-async function init() {
+async function init(initialParams?: IWizardAnswers): Promise<void> {
   console.log(TEMPLATE_FOLDER);
 
-  const params = await askParams();
-  const builder = getBuilder(params);
+  let params = await askParams(initialParams);
+  const builder = getBuilder(params, cwd());
+
+  params = await builder.askMore();
+  const confirm = await confirmParams();
+
+  if (!confirm) {
+    return init(params);
+  }
+
   await builder.build();
 }
 

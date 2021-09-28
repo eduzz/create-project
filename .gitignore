@@ -1,4 +1,5 @@
-.DS_Store
 node_modules
-*.log
+vendor
+.DS_Store
 generator/**/*.js
+teste

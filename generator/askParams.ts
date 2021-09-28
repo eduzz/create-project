@@ -3,8 +3,12 @@ import kebabCase from 'lodash/kebabCase';
 
 import { IWizardAnswers } from './interfaces';
 
+export type ParamQuestions<Q extends IWizardAnswers = IWizardAnswers> = inquirer.QuestionCollection<Q>;
+
 export async function askParams(previousAnswers?: IWizardAnswers): Promise<IWizardAnswers> {
-  const params = await inquirer.prompt<IWizardAnswers>([
+  if (previousAnswers) console.log('\n---- Responda novamente:');
+
+  return inquirer.prompt<IWizardAnswers>([
     {
       name: 'type',
       default: previousAnswers?.type,
@@ -42,13 +46,13 @@ export async function askParams(previousAnswers?: IWizardAnswers): Promise<IWiza
       name: 'project',
       default: previousAnswers?.project,
       message: 'Nome do projeto *',
-      validate: i => (i.length >= 3 ? true : 'Pelo menos 3 letras')
+      validate: (i: string) => (i.length >= 3 ? true : 'Pelo menos 3 letras')
     },
     {
       name: 'slug',
       default: (answers: IWizardAnswers) => kebabCase(answers.project) ?? previousAnswers?.slug,
       message: 'Slug *',
-      validate: (value, answers: IWizardAnswers) => {
+      validate: (value: string, answers: IWizardAnswers) => {
         if (value.length < 3) {
           return 'Pelo menos 3 letras';
         }
@@ -65,21 +69,16 @@ export async function askParams(previousAnswers?: IWizardAnswers): Promise<IWiza
       default: previousAnswers?.repository,
       message: 'Repositorio'
     },
-    // {
-    //   name: 'dockerImage',
-    //   default: a => answers.dockerImage || `infraeduzz/${kebabCase(a.project).toLowerCase()}`,
-    //   message: 'Docker Repo (infraeduzz/example)'
-    // },
-    // {
-    //   name: 'dockerCredentials',
-    //   default: answers.dockerCredentials,
-    //   message: 'Docker Credentials (UUID/GUID)'
-    // },
     {
       name: 'sentryDsn',
       default: previousAnswers?.sentryDsn,
       message: 'Sentry DSN'
-    },
+    }
+  ]);
+}
+
+export async function confirmParams() {
+  const { confirmed } = await inquirer.prompt<{ confirmed: boolean }>([
     {
       name: 'confirmed',
       type: 'confirm',
@@ -87,10 +86,13 @@ export async function askParams(previousAnswers?: IWizardAnswers): Promise<IWiza
     }
   ]);
 
-  if (!params.confirmed) {
-    console.log('---- Responda novamente:');
-    return askParams(params);
-  }
+  return confirmed;
+}
 
-  return params;
+export async function askMoreParams<P extends IWizardAnswers>(
+  answers: IWizardAnswers,
+  questions: ParamQuestions
+): Promise<P> {
+  const moreAnswers = await inquirer.prompt<any>(questions, answers);
+  return { ...answers, ...moreAnswers };
 }
