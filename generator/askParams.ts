@@ -6,8 +6,11 @@ import { IWizardAnswers } from './interfaces';
 export type ParamQuestions<Q extends IWizardAnswers = IWizardAnswers> = inquirer.QuestionCollection<Q>;
 
 export async function askParams(previousAnswers?: IWizardAnswers): Promise<IWizardAnswers> {
-  if (previousAnswers) console.log('\n---- Responda novamente:');
-
+  console.log(
+    !previousAnswers
+      ? 'Antes de mais nada responsa algumas perguntas 🤓:'
+      : '\n---- Errou neh rapaz 🤦‍♂️? Responda novamente:'
+  );
   return inquirer.prompt<IWizardAnswers>([
     {
       name: 'type',
@@ -18,7 +21,7 @@ export async function askParams(previousAnswers?: IWizardAnswers): Promise<IWiza
         { type: 'choice', name: 'Front', value: 'front' },
         { type: 'choice', name: 'Mobile', value: 'mobile' }
       ],
-      message: 'Back/Front ou Mobile?'
+      message: 'Que tipo de projeto deseja iniciar?'
     },
     {
       name: 'language',
@@ -63,16 +66,6 @@ export async function askParams(previousAnswers?: IWizardAnswers): Promise<IWiza
 
         return true;
       }
-    },
-    {
-      name: 'repository',
-      default: previousAnswers?.repository,
-      message: 'Repositorio'
-    },
-    {
-      name: 'sentryDsn',
-      default: previousAnswers?.sentryDsn,
-      message: 'Sentry DSN'
     }
   ]);
 }

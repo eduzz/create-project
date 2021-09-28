@@ -1,12 +1,14 @@
 import ora from 'ora';
 
 import { ParamQuestions } from '../askParams';
+import { execCommand } from '../command';
 import { IBuilderReplacer, IWizardAnswers } from '../interfaces';
 import { AbstractProjectBuilder } from './abstract';
 
 interface IWizardExtra extends IWizardAnswers {
   endpointDev: string;
   endpointProd: string;
+  sentryDsn: string;
 }
 
 export class FrontReactBuilder extends AbstractProjectBuilder<IWizardExtra> {
@@ -21,15 +23,33 @@ export class FrontReactBuilder extends AbstractProjectBuilder<IWizardExtra> {
       name: 'endpointProd',
       default: (answers: IWizardExtra) => answers.endpointProd,
       message: 'Endpoint API(Prod)'
+    },
+    {
+      name: 'sentryDsn',
+      default: (answers: IWizardExtra) => answers.sentryDsn,
+      message: 'Sentry DSN'
     }
   ];
+
+  public async checkDeps() {
+    const loader = ora('Verificando dependências').start();
+    try {
+      await execCommand('yarn', ['-v']);
+      loader.succeed();
+    } catch (err) {
+      loader.fail();
+      throw new Error('Yarn é obrigatório');
+    }
+  }
 
   public async build(): Promise<void> {
     await this.copyFiles();
     await this.config();
+
+    await execCommand('yarn', ['install'], { cwd: this.getTargetPath() });
   }
 
-  private async config() {
+  public async config() {
     const loader = ora('Configurando').start();
 
     const replacers: IBuilderReplacer[] = [
@@ -38,7 +58,6 @@ export class FrontReactBuilder extends AbstractProjectBuilder<IWizardExtra> {
       { from: 'Projeto Base React Eduzz', to: this.params.project },
       { from: '%PROJECT-SLUG%', to: this.params.slug },
       { from: 'PROJECT-SLUG', to: this.params.slug },
-      { from: '%PROJECT-REPO%', to: this.params.repository },
       { from: '%DEV-ENDPOINT%', to: this.params.endpointDev || '%DEV-ENDPOINT%' },
       { from: '%PROD-ENDPOINT%', to: this.params.endpointProd || '%PROD-ENDPOINT%' },
       // { from: '%DOCKER-IMAGE%', to: this.params.dockerImage || '%DOCKER-IMAGE%' },

@@ -17,7 +17,9 @@ export abstract class AbstractProjectBuilder<P extends IWizardAnswers = IWizardA
   constructor(params: IWizardAnswers, private targetBasePath: string) {
     this.params = params as P;
   }
+
   public abstract build(): Promise<void>;
+  public abstract checkDeps(): Promise<void>;
 
   public async askMore(): Promise<IWizardAnswers> {
     if (this.moreParamsQuestions) {

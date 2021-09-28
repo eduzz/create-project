@@ -4,8 +4,6 @@ export interface IWizardAnswers {
   purpose: 'api' | 'microservice';
   project: string;
   slug: string;
-  repository: string;
-  sentryDsn?: string;
 }
 
 export interface IBuilderReplacer {

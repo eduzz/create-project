@@ -3,11 +3,6 @@
   "description": "Front Base for React Admin",
   "version": "0.0.1",
   "private": true,
-  "repository": {
-    "type": "git",
-    "url": "%PROJECT-REPO%",
-    "seed": "git@github.com:eduzz/react-admin-seed.git"
-  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
