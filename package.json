@@ -1,11 +1,12 @@
 {
   "name": "@eduzz/create-project",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "main": "./index.js",
   "bin": {
-    "@eduzz/create-project": "./index.js"
+    "eduzz-create-project": "./index.js"
   },
   "scripts": {
+    "prestart": "git clean -f -x",
     "start": "ts-node ./index.js",
     "prepare": "yarn tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
