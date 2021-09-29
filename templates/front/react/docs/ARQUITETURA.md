@@ -5,19 +5,18 @@ ARQUITETURA
 
 | NAME                 | DEFAULT    | REQUIRED | DESCRIPTION               |
 |----------------------|------------|----------|---------------------------|
+| REACT_APP_SENTRY_KEY |            | false    | DNS public from sentry.io |
 | REACT_APP_ENV        | production | false    | production or development |
 | REACT_APP_API_HOST   |            | true     |                           |
-| REACT_APP_SENTRY_KEY |            | false    | DNS public from sentry.io |
 
 ### Scripts do package.json
 
-| Comando         | Descrição                                      | Quem usa                           |
-|-----------------|------------------------------------------------|------------------------------------|
-| dev             | inicia o react-scripts-ts                      | Docker (dev) / desenvolvedor       |
-| build           | gera os arquivos transpilados                  | Docker (durante build de produção) |
-| eject           | ejeta os arquivos do webpack (não recomendado) | desenvolvedor                      |
-| webpack-analyze | use para verificar o tamanho o bundle final    | devensolvedor                      |
-| update-base     | use atualizar a base do app                    | devensolvedor                      |
+| Comando | Descrição                     | Quem usa                           |
+|---------|-------------------------------|------------------------------------|
+| start   | inicia o react-scripts-ts     | desenvolvedor                      |
+| build   | gera os arquivos transpilados | Docker (durante build de produção) |
+| test    | roda os teste unitários       | desenvolvedor                      |
+| lint    | roda os linters               | devensolvedor e git(husky)         |
 
 ### Sistema de pastas
 

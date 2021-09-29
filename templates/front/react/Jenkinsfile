@@ -1,29 +1,67 @@
-import java.text.SimpleDateFormat
-
 node {
     def app
-    def dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm")
-    def date = new Date()
+    def IMAGE = '%PROJECT-SLUG%'
 
-    stage ('Clone Repository') {
-        checkout scm
+    def ECS_CLUSTER = '' // Trocar
+    def ECS_SERVICE = '' // Trocar
+
+    def ECS_QA_CLUSTER = '' // Trocar
+    def ECS_QA_SERVICE = '' // Trocar
+
+    try {
+        stage ('Clone Repository') {
+            checkout scm
+        }
+
+        stage ('Set Environment') {
+            if (!(env.BRANCH_NAME =~ /(master)/)) {
+                sh "sh ./scripts/set-env-homolog.sh ${env.BRANCH_NAME} ${env.BUILD_NUMBER}"
+            }
+
+            sh "sh ./scripts/set-env.sh"
+        }
+
+        stage ('Sonar') {
+            def nodePath = tool name: 'NodeJS 15', type: 'nodejs'
+            def scannerHome = tool 'SonarScanner 4.6.0';
+            withSonarQubeEnv {
+                withEnv(["PATH+NODE=${nodePath}/bin"]) {
+                    sh "${scannerHome}/bin/sonar-scanner"
+                }
+            }
+        }
+
+        stage ('Build Container') {
+            withCredentials([sshUserPrivateKey(credentialsId: "jenkinsSshPrivateKey", keyFileVariable: 'PRIVATE_KEY')]) {
+                sh "cp \$PRIVATE_KEY id_rsa"
+                app = docker.build(IMAGE, '-f docker/prod/Dockerfile .')
+                sh "rm id_rsa"
+            }
+        }
+
+
+        stage('Publish to ECR') {
+            if (env.BRANCH_NAME =~ /(master)/) {
+                docker.withRegistry("https://${env.ECR_URL}", env.ECR_CRED) {
+                    app.push("${env.BRANCH_NAME}-${env.BUILD_NUMBER}")
+                    app.push("${env.BRANCH_NAME}")
+                }
+            }
+        }
+
+        stage('Deploy') {
+            if (env.BRANCH_NAME ==~ /(master)/) {
+                sh "ecs-deploy -c \"${ECS_CLUSTER}\" -n \"${ECS_SERVICE}\" -t 500 -i \"${env.ECR_URL}/${IMAGE}:${env.BRANCH_NAME}-${env.BUILD_NUMBER}\""
+            }
+
+            if (env.BRANCH_NAME ==~ /(release.*|hotfix.*)/) {
+                sh "ecs-deploy -c \"${ECS_QA_CLUSTER}\" -n \"${ECS_QA_SERVICE}\" -t 500 --force-new-deployment -i \"${env.ECR_URL}/${IMAGE}:${env.BRANCH_NAME}-${env.BUILD_NUMBER}\""
+            }
+        }
+    } catch (err) {
+        throw err
+    } finally {
+        cleanWs()
     }
 
-    stage ('Set Env') {
-        sh "sh ./scripts/build-set-env.sh"
-    }
-
-    stage ('Build container') {
-        app = docker.build("%DOCKER-IMAGE%", "-f ./prod/Dockerfile .")
-    }
-
-     stage('Publish to DockerHub') {
-         if (env.BRANCH_NAME ==~ /(develop|master)/) {
-             withDockerRegistry([credentialsId: '%DOCKER-CREDENTIALS%', url: 'https://registry.hub.docker.com']) {
-                 app.push("${env.BRANCH_NAME}-${env.BUILD_NUMBER}")
-                 app.push("${env.BRANCH_NAME}")
-             }
-
-         }
-     }
 }

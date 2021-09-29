@@ -7,9 +7,10 @@ Utilize o VSCode, já está configurado com sugestão de extensões.
 
 * React/Hooks
 * Typescript
-* RxJs
+* Redux Toolkit
 * React Router
 * Material UI (UI Framework)
+* Eduzz Houston
 
 ### Iniciando um novo projeto
 

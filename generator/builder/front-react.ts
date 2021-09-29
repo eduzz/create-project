@@ -1,7 +1,7 @@
 import ora from 'ora';
 
 import { ParamQuestions } from '../askParams';
-import { execCommand, execCommandSilent } from '../command';
+import { execCommandSilent } from '../command';
 import { IBuilderReplacer, IWizardAnswers } from '../interfaces';
 import { AbstractProjectBuilder } from './abstract';
 
@@ -35,7 +35,7 @@ export class FrontReactBuilder extends AbstractProjectBuilder<IWizardExtra> {
   public async checkDeps() {
     const loader = ora('Verificando dependências').start();
     try {
-      await execCommandSilent('yarn', ['-v'], { stdio: 'ignore' });
+      await execCommandSilent('yarn', ['-v']);
       loader.succeed();
     } catch (err) {
       loader.fail();
@@ -47,8 +47,7 @@ export class FrontReactBuilder extends AbstractProjectBuilder<IWizardExtra> {
     await this.copyFiles();
     await this.config();
     await this.gitInit();
-
-    await execCommand('yarn', ['install'], { cwd: this.getTargetPath() });
+    await this.installDeps();
   }
 
   public async config() {
@@ -79,5 +78,11 @@ export class FrontReactBuilder extends AbstractProjectBuilder<IWizardExtra> {
     ]);
 
     loader.succeed();
+  }
+
+  private async installDeps() {
+    const loader = ora('Rodando o Yarn').start();
+    await execCommandSilent('yarn', ['install'], { cwd: this.getTargetPath() });
+    loader.stop();
   }
 }
