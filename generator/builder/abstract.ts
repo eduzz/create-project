@@ -1,19 +1,15 @@
-import { existsSync } from 'fs';
 import fs from 'fs/promises';
 import path from 'path';
 
 import ora from 'ora';
-import ProgressBar from 'progress';
 
 import { askMoreParams, ParamQuestions } from '../askParams';
-import { execCommandSilent } from '../command';
-import { TEMPLATE_FOLDER } from '../config';
-import getFolderSize from '../folderSize';
+import { execCommand, execCommandSilent } from '../command';
 import { IBuilderReplacer, IWizardAnswers } from '../interfaces';
 
 export abstract class AbstractProjectBuilder<P extends IWizardAnswers = IWizardAnswers> {
   public abstract initCommand: string;
-  protected abstract templatePath: string;
+  protected abstract templateUrl: string;
   protected abstract moreParamsQuestions: ParamQuestions<P>;
 
   protected params: P;
@@ -37,40 +33,8 @@ export abstract class AbstractProjectBuilder<P extends IWizardAnswers = IWizardA
     return path.join(this.targetBasePath, this.params.slug);
   }
 
-  protected getTemplateFullPath(): string {
-    return path.join(TEMPLATE_FOLDER, this.templatePath);
-  }
-
   protected async copyFiles(): Promise<void> {
-    const loader = ora('Preparando').start();
-    const templateSize = await getFolderSize(this.getTemplateFullPath());
-    loader.succeed();
-
-    const progress = new ProgressBar('Copiando [:bar] :percent :finalSize/:templateSize :etas', {
-      total: templateSize,
-      width: 20
-    });
-
-    let lastSize = 0;
-    const checkInterval = setInterval(async () => {
-      const finalSize = await getFolderSize(this.getTargetPath());
-      progress.tick(finalSize - lastSize, { finalSize: this.bToMB(finalSize), templateSize: this.bToMB(templateSize) });
-      lastSize = finalSize;
-    }, 500);
-
-    await fs.mkdir(this.getTargetPath());
-    await fs.cp(this.getTemplateFullPath(), this.getTargetPath(), {
-      recursive: true,
-      filter: path => !/templates.+(node_modules|vendor)/gim.test(path)
-    });
-
-    const npmIgnore = path.join(this.getTargetPath(), '.npmignore');
-    if (existsSync(npmIgnore)) {
-      // o npm renomeia o .gitignore para .npmignore
-      await fs.rename(npmIgnore, path.join(this.getTargetPath(), '.gitignore'));
-    }
-
-    clearInterval(checkInterval);
+    await execCommand('git', ['clone', this.templateUrl, this.getTargetPath()]);
     ora('Arquivos copiados').succeed();
   }
 
@@ -88,14 +52,11 @@ export abstract class AbstractProjectBuilder<P extends IWizardAnswers = IWizardA
   protected async gitInit() {
     const loader = ora('Git').start();
 
-    await execCommandSilent('git', ['init'], { stdio: 'ignore', cwd: this.getTargetPath() });
-    await execCommandSilent('git', ['add', '.'], { stdio: 'ignore', cwd: this.getTargetPath() });
-    await execCommandSilent('git', ['commit', '-nm', 'Commit inicial'], { stdio: 'ignore', cwd: this.getTargetPath() });
+    await execCommandSilent('rm', ['-r', '.git'], { cwd: this.getTargetPath() });
+    await execCommandSilent('git', ['init'], { cwd: this.getTargetPath() });
+    await execCommandSilent('git', ['add', '.'], { cwd: this.getTargetPath() });
+    await execCommandSilent('git', ['commit', '-nm', 'Commit inicial'], { cwd: this.getTargetPath() });
 
     loader.succeed();
-  }
-
-  private bToMB(val: number) {
-    return (val / 1024 / 1024).toFixed(2) + 'Mb';
   }
 }

@@ -23,8 +23,8 @@
   "homepage": "https://github.com/eduzz/templates#readme",
   "dependencies": {
     "fs-extra": "^10.0.0",
-    "inquirer": "8.1.5",
-    "lodash": "4.17.21",
+    "inquirer": "^8",
+    "lodash": "^4",
     "ora": "5",
     "progress": "^2.0.3",
     "source-map-support": "^0.5.20",

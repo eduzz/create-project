@@ -13,7 +13,7 @@ interface IWizardExtra extends IWizardAnswers {
 
 export class FrontReactBuilder extends AbstractProjectBuilder<IWizardExtra> {
   public initCommand = 'yarn start';
-  protected templatePath = 'front/react';
+  protected templateUrl = 'https://github.com/eduzz/template-react';
   protected moreParamsQuestions: ParamQuestions<IWizardExtra> = [
     {
       name: 'endpointDev',
