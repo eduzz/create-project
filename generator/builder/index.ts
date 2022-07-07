@@ -1,6 +1,7 @@
+import { FrontReactBuilder } from './front-react';
+
 import { IWizardAnswers } from '../interfaces';
 import { AbstractProjectBuilder } from './abstract';
-import { FrontReactBuilder } from './front-react';
 
 export function getBuilder(params: IWizardAnswers, targetPath: string): AbstractProjectBuilder {
   // eslint-disable-next-line sonarjs/no-small-switch

@@ -8,18 +8,13 @@ import { execCommand, execCommandSilent } from '../command';
 import { IBuilderReplacer, IWizardAnswers } from '../interfaces';
 
 export abstract class AbstractProjectBuilder<P extends IWizardAnswers = IWizardAnswers> {
+  protected params: P;
   public abstract initCommand: string;
   protected abstract templateUrl: string;
   protected abstract moreParamsQuestions: ParamQuestions<P>;
-
-  protected params: P;
-
   constructor(params: IWizardAnswers, private targetBasePath: string) {
     this.params = params as P;
   }
-
-  public abstract build(): Promise<void>;
-  public abstract checkDeps(): Promise<void>;
 
   public async askMore(): Promise<IWizardAnswers> {
     if (this.moreParamsQuestions) {
@@ -59,4 +54,7 @@ export abstract class AbstractProjectBuilder<P extends IWizardAnswers = IWizardA
 
     loader.succeed();
   }
+
+  public abstract build(): Promise<void>;
+  public abstract checkDeps(): Promise<void>;
 }

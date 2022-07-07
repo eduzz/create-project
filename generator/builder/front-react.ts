@@ -55,8 +55,6 @@ export class FrontReactBuilder extends AbstractProjectBuilder<IWizardExtra> {
 
     const replacers: IBuilderReplacer[] = [
       { from: '%PROJECT-NAME%', to: this.params.project },
-      { from: 'PROJECT-NAME', to: this.params.project },
-      { from: 'Projeto Base React Eduzz', to: this.params.project },
       { from: '%PROJECT-SLUG%', to: this.params.slug },
       { from: 'PROJECT-SLUG', to: this.params.slug },
       { from: '%DEV-ENDPOINT%', to: this.params.endpointDev || '%DEV-ENDPOINT%' },
@@ -71,7 +69,6 @@ export class FrontReactBuilder extends AbstractProjectBuilder<IWizardExtra> {
       this.replaceContent('package.json', replacers),
       this.replaceContent('public/index.html', replacers),
       this.replaceContent('README.md', replacers),
-      this.replaceContent('docker-compose.yml', replacers),
       this.replaceContent('.env.development', replacers),
       this.replaceContent('.env.production', replacers),
       this.replaceContent('.gitignore', [{ from: 'yarn.lock', to: '' }])
